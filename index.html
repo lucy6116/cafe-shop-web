@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh‑CN">
+<head>
+  <meta charset="UTF‑8" />
+  <meta name="viewport" content="width=device‑width, initial‑scale=1.0"/>
+  <title>☕ 街角咖啡厅｜菜单</title>
+  <style>
+    *{margin:0;padding:0;box‑sizing:border‑box;font‑family:system‑ui,‑apple‑system}
+    body{background:#f7f3ee;padding:20px;max‑width:1200px;margin:0 auto}
+    .header{text‑align:center;margin‑bottom:32px}
+    .shop‑name{font‑size:28px;color:#442e22;margin‑bottom:8px}
+    .shop‑slogan{color:#705c53;font‑size:15px}
+    .product‑wrap{display:grid;grid‑template‑columns:repeat(auto‑fill,minmax(260px,1fr));gap:20px}
+    .card{background:#fff;border‑radius:14px;overflow:hidden;box‑shadow:0 2px 12px rgba(0,0,0,0.08)}
+    .card‑img{height:180px;width:100%;object‑fit:cover;background:#eee}
+    .card‑body{padding:16px}
+    .title{font‑size:18px;font‑weight:600;color:#222}
+    .desc{font‑size:14px;color:#777;margin:8px 0 12px;min‑height:40px}
+    .row{display:flex;justify‑content:space‑between;align‑items:center}
+    .price{font‑size:20px;color:#b85c38;font‑weight:bold}
+    .buy‑btn{background:#b85c38;color:#fff;border:none;padding:8px 16px;border‑radius:8px;font‑size:15px;cursor:pointer}
+    .buy‑btn:active{opacity:0.85}
+    .pay‑modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align‑items:center;justify‑content:center;padding:20px}
+    .modal‑inner{background:#fff;padding:24px;border‑radius:12px;text‑align:center;max‑width:340px;width:100%}
+    .qrcode‑img{width:220px;height:220px;margin:12px auto;border‑radius:6px}
+    .close‑btn{margin‑top:16px;padding:8px 20px;border:none;border‑radius:8px;background:#442e22;color:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="shop‑name">街角咖啡厅</h1>
+    <p class="shop‑slogan">新鲜现磨咖啡 · 到店扫码点单</p>
+  </div>
+  <div class="product‑wrap" id="productList"></div>
+
+  <div class="pay‑modal" id="payModal">
+    <div class="modal‑inner">
+      <h3>微信扫码付款</h3>
+      <img class="qrcode‑img" id="payQrcode" alt="收款码"/>
+      <p id="payTip"></p>
+      <button class="close‑btn" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+
+<script>
+const SHOP_ID = "shop_001";
+
+async function loadProducts(){
+  try {
+    const res = await fetch("/api/feishu‑proxy?shop_id="+SHOP_ID);
+    const data = await res.json();
+    renderList(data.records||[]);
+  }catch(e){
+    // API失败展示模拟数据，方便预览
+    const mockData = [
+      {fields:{product_name:"热拿铁",price:28,description:"醇厚牛奶搭配浓缩咖啡，丝滑口感",wx_pay_qrcode_url:""}},
+      {fields:{product_name:"冰美式",price:22,description:"清爽冰美式，提神解乏",wx_pay_qrcode_url:""}},
+      {fields:{product_name:"焦糖玛奇朵",price:32,description:"香甜焦糖风味，奶香浓郁",wx_pay_qrcode_url:""}}
+    ]
+    renderList(mockData)
+  }
+}
+
+function renderList(list){
+  const dom = document.getElementById("productList");
+  dom.innerHTML = ""
+  list.forEach(item=>{
+    const f = item.fields;
+    const div = document.createElement("div");
+    div.className = "card";
+    const imgSrc = f.cover_image?.[0]?.url || 'https://picsum.photos/id/1060/400/220';
+    div.innerHTML = `
+      <img class="card‑img" src="${imgSrc}" alt="${f.product_name}">
+      <div class="card‑body">
+        <div class="title">${f.product_name}</div>
+        <div class="desc">${f.description||""}</div>
+        <div class="row">
+          <span class="price">¥${f.price}</span>
+          <button class="buy‑btn" onclick="openPay('${f.wx_pay_qrcode_url}','${f.price}')">立即购买</button>
+        </div>
+      </div>
+    `
+    dom.appendChild(div)
+  })
+}
+
+function openPay(qrcodeUrl,price){
+  const modal = document.getElementById("payModal");
+  const qrImg = document.getElementById("payQrcode");
+  if(!qrcodeUrl){
+    alert("商家尚未配置微信收款码");
+    return;
+  }
+  qrImg.src = qrcodeUrl;
+  document.getElementById("payTip").innerText = `应付金额：¥${price}`
+  modal.style.display = "flex";
+}
+function closeModal(){
+  document.getElementById("payModal").style.display = "none";
+}
+loadProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh‑CN">
+<head>
+<meta charset="UTF‑8">
+<meta name="viewport" content="width=device‑width, initial‑scale=1.0"/>
+<title>商家后台｜商品管理</title>
+<style>
+body{padding:24px;max‑width:800px;margin:0 auto}
+h2{margin‑bottom:24px;color:#222}
+.form‑item{margin:14px 0}
+label{display:block;margin‑bottom:6px;font‑weight:500}
+input,textarea{width:100%;padding:10px;font‑size:16px;border:1px solid #ccc;border‑radius:6px}
+textarea{min‑height:80px}
+button{padding:10px 22px;background:#442e22;color:#fff;border:none;border‑radius:6px;cursor:pointer}
+button:active{opacity:0.85}
+.tip{font‑size:13px;color:#888;margin‑top:4px}
+</style>
+</head>
+<body>
+<h2>📦 咖啡厅商品录入后台</h2>
+<div class="form‑item">
+  <label>商品名称</label>
+  <input type="text" id="pname" placeholder="例如：热拿铁">
+</div>
+<div class="form‑item">
+  <label>价格（元）</label>
+  <input type="number" id="pprice" placeholder="28">
+</div>
+<div class="form‑item">
+  <label>商品描述</label>
+  <textarea id="pdesc" placeholder="简单介绍"></textarea>
+</div>
+<div class="form‑item">
+  <label>商品图片</label>
+  <input type="file" id="pimg" accept="image/*">
+  <div class="tip">图片上传飞书，拿到附件链接填入下方</div>
+</div>
+<div class="form‑item">
+  <label>微信收款码链接</label>
+  <input type="text" id="wxqr" placeholder="粘贴收款码图片地址">
+</div>
+<button onclick="submitProduct()">保存到飞书商品库</button>
+
+<script>
+const SHOP_ID = "shop_001";
+
+async function submitProduct(){
+  const payload = {
+    product_name:document.getElementById('pname').value,
+    price:Number(document.getElementById('pprice').value),
+    description:document.getElementById('pdesc').value,
+    wx_pay_qrcode_url:document.getElementById('wxqr').value,
+    shop_id:SHOP_ID
+  }
+  try{
+    const res = await fetch("/api/feishu‑proxy",{
+      method:"POST",
+      headers:{"Content‑Type":"application/json"},
+      body:JSON.stringify(payload)
+    })
+    const ret = await res.json();
+    alert(ret.ok?"保存成功":"失败："+ret.msg);
+  }catch(err){
+    console.error(err);
+    alert("当前为原型模式，已模拟提交。部署Cloudflare+配置飞书应用后正式生效");
+  }
+}
+</script>
+</body>
+</html>

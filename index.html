@@ -53,9 +53,9 @@ async function loadProducts(){
   }catch(e){
     // API失败展示模拟数据，方便预览
     const mockData = [
-      {fields:{product_name:"热拿铁",price:28,description:"醇厚牛奶搭配浓缩咖啡，丝滑口感",wx_pay_qrcode_url:""}},
-      {fields:{product_name:"冰美式",price:22,description:"清爽冰美式，提神解乏",wx_pay_qrcode_url:""}},
-      {fields:{product_name:"焦糖玛奇朵",price:32,description:"香甜焦糖风味，奶香浓郁",wx_pay_qrcode_url:""}}
+      {fields:{"商品名称":"热拿铁","价格":28,"商品描述":"醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
+      {fields:{"商品名称":"冰美式","价格":22,"商品描述":"清爽冰美式，提神解乏"}},
+      {fields:{"商品名称":"焦糖玛奇朵","价格":32,"商品描述":"香甜焦糖风味，奶香浓郁"}}
     ]
     renderList(mockData)
   }
@@ -68,15 +68,16 @@ function renderList(list){
     const f = item.fields;
     const div = document.createElement("div");
     div.className = "card";
-    const imgSrc = f.cover_image?.[0]?.url || 'https://picsum.photos/id/1060/400/220';
+    const imgSrc = (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://picsum.photos/id/1060/400/220';
+    const qrUrl = (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
     div.innerHTML = `
-      <img class="card‑img" src="${imgSrc}" alt="${f.product_name}">
+      <img class="card‑img" src="${imgSrc}" alt="${f["商品名称"]}">
       <div class="card‑body">
-        <div class="title">${f.product_name}</div>
-        <div class="desc">${f.description||""}</div>
+        <div class="title">${f["商品名称"]}</div>
+        <div class="desc">${f["商品描述"]||""}</div>
         <div class="row">
-          <span class="price">¥${f.price}</span>
-          <button class="buy‑btn" onclick="openPay('${f.wx_pay_qrcode_url}','${f.price}')">立即购买</button>
+          <span class="price">¥${f["价格"]}</span>
+          <button class="buy‑btn" onclick="openPay('${qrUrl}','${f["价格"]}')">立即购买</button>
         </div>
       </div>
     `

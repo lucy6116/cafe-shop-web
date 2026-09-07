@@ -46,11 +46,11 @@ const SHOP_ID = "shop_001";
 
 async function submitProduct(){
   const payload = {
-    product_name:document.getElementById('pname').value,
-    price:Number(document.getElementById('pprice').value),
-    description:document.getElementById('pdesc').value,
-    wx_pay_qrcode_url:document.getElementById('wxqr').value,
-    shop_id:SHOP_ID
+    "店铺ID": SHOP_ID,
+    "商品名称": document.getElementById('pname').value,
+    "价格": Number(document.getElementById('pprice').value),
+    "商品描述": document.getElementById('pdesc').value,
+    "微信收款码": document.getElementById('wxqr').value
   }
   try{
     const res = await fetch("/api/feishu‑proxy",{

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 飞书多维表格代理接口
  * 环境变量需要在Cloudflare Pages设置：
  * FEISHU_APP_ID
@@ -13,7 +13,7 @@ export async function onRequest(context) {
 
   if(request.method==="GET"){
     //读取商品列表
-    const tokenResp = await fetch("https://open.feishu.cn/open-api/auth/v3/tenant_access_token/internal",{
+    const tokenResp = await fetch("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({app_id:env.FEISHU_APP_ID,app_secret:env.FEISHU_APP_SECRET})
@@ -22,7 +22,7 @@ export async function onRequest(context) {
     if(!tk.tenant_access_token) return new Response(JSON.stringify({records:[]}),{status:500});
 
     const filter = `CurrentValue.[店铺ID] == "${shopId}" && CurrentValue.[是否上架] == true`;
-    const tableRes = await fetch(`https://open.feishu.cn/open-api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records?filter=${encodeURIComponent(filter)}`,{
+    const tableRes = await fetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records?filter=${encodeURIComponent(filter)}`,{
       headers:{"Authorization":"Bearer "+tk.tenant_access_token}
     })
     const tableData = await tableRes.json();
@@ -32,7 +32,7 @@ export async function onRequest(context) {
   if(request.method==="POST"){
     //新增商品
     const body = await request.json();
-    const tokenResp = await fetch("https://open.feishu.cn/open-api/auth/v3/tenant_access_token/internal",{
+    const tokenResp = await fetch("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({app_id:env.FEISHU_APP_ID,app_secret:env.FEISHU_APP_SECRET})
@@ -52,7 +52,7 @@ export async function onRequest(context) {
       fields["微信收款码"] = [{ "url": body["微信收款码"] }];
     }
     const postBody = { fields }
-    const addRes = await fetch(`https://open.feishu.cn/open-api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records`,{
+    const addRes = await fetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records`,{
       method:"POST",
       headers:{"Authorization":"Bearer "+tk.tenant_access_token,"Content-Type":"application/json"},
       body:JSON.stringify(postBody)

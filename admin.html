@@ -53,9 +53,9 @@ async function submitProduct(){
     "微信收款码": document.getElementById('wxqr').value
   }
   try{
-    const res = await fetch("/api/feishu‑proxy",{
+    const res = await fetch("/api/feishu-proxy",{
       method:"POST",
-      headers:{"Content‑Type":"application/json"},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify(payload)
     })
     const ret = await res.json();

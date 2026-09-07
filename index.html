@@ -47,7 +47,7 @@ const SHOP_ID = "shop_001";
 
 async function loadProducts(){
   try {
-    const res = await fetch("/api/feishu‑proxy?shop_id="+SHOP_ID);
+    const res = await fetch("/api/feishu-proxy?shop_id="+SHOP_ID);
     const data = await res.json();
     renderList(data.records||[]);
   }catch(e){

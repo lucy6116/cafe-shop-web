@@ -13,28 +13,28 @@ export async function onRequest(context) {
 
   if(request.method==="GET"){
     //读取商品列表
-    const tokenResp = await fetch("https://open.feishu.cn/open‑api/auth/v3/tenant_access_token/internal",{
+    const tokenResp = await fetch("https://open.feishu.cn/open-api/auth/v3/tenant_access_token/internal",{
       method:"POST",
-      headers:{"Content‑Type":"application/json"},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify({app_id:env.FEISHU_APP_ID,app_secret:env.FEISHU_APP_SECRET})
     })
     const tk = await tokenResp.json();
     if(!tk.tenant_access_token) return new Response(JSON.stringify({records:[]}),{status:500});
 
     const filter = `CurrentValue.[店铺ID] == "${shopId}" && CurrentValue.[是否上架] == true`;
-    const tableRes = await fetch(`https://open.feishu.cn/open‑api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records?filter=${encodeURIComponent(filter)}`,{
+    const tableRes = await fetch(`https://open.feishu.cn/open-api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records?filter=${encodeURIComponent(filter)}`,{
       headers:{"Authorization":"Bearer "+tk.tenant_access_token}
     })
     const tableData = await tableRes.json();
-    return new Response(JSON.stringify(tableData.data||{records:[]}),{headers:{"content‑type":"application/json"}})
+    return new Response(JSON.stringify(tableData.data||{records:[]}),{headers:{"content-type":"application/json"}})
   }
 
   if(request.method==="POST"){
     //新增商品
     const body = await request.json();
-    const tokenResp = await fetch("https://open.feishu.cn/open‑api/auth/v3/tenant_access_token/internal",{
+    const tokenResp = await fetch("https://open.feishu.cn/open-api/auth/v3/tenant_access_token/internal",{
       method:"POST",
-      headers:{"Content‑Type":"application/json"},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify({app_id:env.FEISHU_APP_ID,app_secret:env.FEISHU_APP_SECRET})
     })
     const tk = await tokenResp.json();
@@ -52,13 +52,13 @@ export async function onRequest(context) {
       fields["微信收款码"] = [{ "url": body["微信收款码"] }];
     }
     const postBody = { fields }
-    const addRes = await fetch(`https://open.feishu.cn/open‑api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records`,{
+    const addRes = await fetch(`https://open.feishu.cn/open-api/bitable/v1/apps/${env.FEISHU_APP_TOKEN}/tables/${env.FEISHU_TABLE_ID}/records`,{
       method:"POST",
-      headers:{"Authorization":"Bearer "+tk.tenant_access_token,"Content‑Type":"application/json"},
+      headers:{"Authorization":"Bearer "+tk.tenant_access_token,"Content-Type":"application/json"},
       body:JSON.stringify(postBody)
     })
     const addData = await addRes.json();
-    return new Response(JSON.stringify({ok:addData.code===0,msg:addData.msg||"ok"}),{headers:{"content‑type":"application/json"}})
+    return new Response(JSON.stringify({ok:addData.code===0,msg:addData.msg||"ok"}),{headers:{"content-type":"application/json"}})
   }
   return new Response("method not allowed",{status:405})
 }

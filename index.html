@@ -1,44 +1,224 @@
 <!DOCTYPE html>
-<html lang="zh‑CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF‑8" />
-  <meta name="viewport" content="width=device‑width, initial‑scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>☕ 街角咖啡厅｜菜单</title>
   <style>
-    *{margin:0;padding:0;box‑sizing:border‑box;font‑family:system‑ui,‑apple‑system}
-    body{background:#f7f3ee;padding:20px;max‑width:1200px;margin:0 auto}
-    .header{text‑align:center;margin‑bottom:32px}
-    .shop‑name{font‑size:28px;color:#442e22;margin‑bottom:8px}
-    .shop‑slogan{color:#705c53;font‑size:15px}
-    .product‑wrap{display:grid;grid‑template‑columns:repeat(auto‑fill,minmax(260px,1fr));gap:20px}
-    .card{background:#fff;border‑radius:14px;overflow:hidden;box‑shadow:0 2px 12px rgba(0,0,0,0.08)}
-    .card‑img{height:180px;width:100%;object‑fit:cover;background:#eee}
-    .card‑body{padding:16px}
-    .title{font‑size:18px;font‑weight:600;color:#222}
-    .desc{font‑size:14px;color:#777;margin:8px 0 12px;min‑height:40px}
-    .row{display:flex;justify‑content:space‑between;align‑items:center}
-    .price{font‑size:20px;color:#b85c38;font‑weight:bold}
-    .buy‑btn{background:#b85c38;color:#fff;border:none;padding:8px 16px;border‑radius:8px;font‑size:15px;cursor:pointer}
-    .buy‑btn:active{opacity:0.85}
-    .pay‑modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align‑items:center;justify‑content:center;padding:20px}
-    .modal‑inner{background:#fff;padding:24px;border‑radius:12px;text‑align:center;max‑width:340px;width:100%}
-    .qrcode‑img{width:220px;height:220px;margin:12px auto;border‑radius:6px}
-    .close‑btn{margin‑top:16px;padding:8px 20px;border:none;border‑radius:8px;background:#442e22;color:#fff;cursor:pointer}
+    :root {
+      --bg-color: #f8f6f0;
+      --card-bg: #ffffff;
+      --primary-color: #442e22;
+      --accent-color: #c86b28;
+      --accent-hover: #b05a1f;
+      --text-main: #2c2c2c;
+      --text-muted: #6e6e6e;
+      --border-radius: 16px;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 32px 20px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px 0;
+    }
+
+    .shop-name {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .shop-slogan {
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    /* Grid Layout */
+    .product-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* Product Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+      background-color: #eee;
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .title {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 6px;
+    }
+
+    .desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+      min-height: 42px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .price {
+      font-size: 22px;
+      color: var(--accent-color);
+      font-weight: 700;
+    }
+
+    .buy-btn {
+      background: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .buy-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .buy-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Modal Overlay */
+    .pay-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-inner {
+      background: #fff;
+      padding: 28px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-inner h3 {
+      font-size: 20px;
+      color: var(--primary-color);
+      margin-bottom: 12px;
+    }
+
+    .qrcode-img {
+      width: 220px;
+      height: 220px;
+      margin: 16px auto;
+      border-radius: 12px;
+      border: 1px solid #eee;
+    }
+
+    #payTip {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-top: 8px;
+    }
+
+    .close-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: var(--primary-color);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .close-btn:hover {
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1 class="shop‑name">街角咖啡厅</h1>
-    <p class="shop‑slogan">新鲜现磨咖啡 · 到店扫码点单</p>
-  </div>
-  <div class="product‑wrap" id="productList"></div>
 
-  <div class="pay‑modal" id="payModal">
-    <div class="modal‑inner">
+  <div class="header">
+    <h1 class="shop-name">☕ 街角咖啡厅</h1>
+    <p class="shop-slogan">新鲜现磨咖啡 · 到店扫码点单</p>
+  </div>
+
+  <div class="product-wrap" id="productList"></div>
+
+  <div class="pay-modal" id="payModal">
+    <div class="modal-inner">
       <h3>微信扫码付款</h3>
-      <img class="qrcode‑img" id="payQrcode" alt="收款码"/>
+      <img class="qrcode-img" id="payQrcode" alt="收款码"/>
       <p id="payTip"></p>
-      <button class="close‑btn" onclick="closeModal()">关闭</button>
+      <button class="close-btn" onclick="closeModal()">关闭</button>
     </div>
   </div>
 
@@ -47,45 +227,47 @@ const SHOP_ID = "shop_001";
 
 async function loadProducts(){
   try {
-    const res = await fetch("/api/feishu-proxy?shop_id="+SHOP_ID);
+    const res = await fetch("/api/feishu-proxy?shop_id=" + SHOP_ID);
     const data = await res.json();
-    renderList(data.records||[]);
-  }catch(e){
-    // API失败展示模拟数据，方便预览
+    renderList(data.records || []);
+  } catch(e) {
     const mockData = [
-      {fields:{"商品名称":"热拿铁","价格":28,"商品描述":"醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
-      {fields:{"商品名称":"冰美式","价格":22,"商品描述":"清爽冰美式，提神解乏"}},
-      {fields:{"商品名称":"焦糖玛奇朵","价格":32,"商品描述":"香甜焦糖风味，奶香浓郁"}}
-    ]
-    renderList(mockData)
+      {fields: {"商品名称": "热拿铁", "价格": 28, "商品描述": "醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
+      {fields: {"商品名称": "冰美式", "价格": 22, "商品描述": "清爽冰美式，提神解乏"}},
+      {fields: {"商品名称": "焦糖玛奇朵", "价格": 32, "商品描述": "香甜焦糖风味，奶香浓郁"}}
+    ];
+    renderList(mockData);
   }
 }
 
 function renderList(list){
   const dom = document.getElementById("productList");
-  dom.innerHTML = ""
-  list.forEach(item=>{
+  dom.innerHTML = "";
+  list.forEach(item => {
     const f = item.fields;
     const div = document.createElement("div");
     div.className = "card";
     const imgSrc = (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://picsum.photos/id/1060/400/220';
     const qrUrl = (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
+    
     div.innerHTML = `
-      <img class="card‑img" src="${imgSrc}" alt="${f["商品名称"]}">
-      <div class="card‑body">
-        <div class="title">${f["商品名称"]}</div>
-        <div class="desc">${f["商品描述"]||""}</div>
+      <img class="card-img" src="${imgSrc}" alt="${f["商品名称"]}">
+      <div class="card-body">
+        <div>
+          <div class="title">${f["商品名称"]}</div>
+          <div class="desc">${f["商品描述"] || ""}</div>
+        </div>
         <div class="row">
           <span class="price">¥${f["价格"]}</span>
-          <button class="buy‑btn" onclick="openPay('${qrUrl}','${f["价格"]}')">立即购买</button>
+          <button class="buy-btn" onclick="openPay('${qrUrl}', '${f["价格"]}')">立即购买</button>
         </div>
       </div>
-    `
-    dom.appendChild(div)
-  })
+    `;
+    dom.appendChild(div);
+  });
 }
 
-function openPay(qrcodeUrl,price){
+function openPay(qrcodeUrl, price){
   const modal = document.getElementById("payModal");
   const qrImg = document.getElementById("payQrcode");
   if(!qrcodeUrl){
@@ -93,12 +275,14 @@ function openPay(qrcodeUrl,price){
     return;
   }
   qrImg.src = qrcodeUrl;
-  document.getElementById("payTip").innerText = `应付金额：¥${price}`
+  document.getElementById("payTip").innerText = `应付金额：¥${price}`;
   modal.style.display = "flex";
 }
+
 function closeModal(){
   document.getElementById("payModal").style.display = "none";
 }
+
 loadProducts();
 </script>
 </body>

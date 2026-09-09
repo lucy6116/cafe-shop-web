@@ -1,45 +1,105 @@
 <!DOCTYPE html>
-<html lang="zh‑CN">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF‑8">
-<meta name="viewport" content="width=device‑width, initial‑scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>商家后台｜商品管理</title>
 <style>
-body{padding:24px;max‑width:800px;margin:0 auto}
-h2{margin‑bottom:24px;color:#222}
-.form‑item{margin:14px 0}
-label{display:block;margin‑bottom:6px;font‑weight:500}
-input,textarea{width:100%;padding:10px;font‑size:16px;border:1px solid #ccc;border‑radius:6px}
-textarea{min‑height:80px}
-button{padding:10px 22px;background:#442e22;color:#fff;border:none;border‑radius:6px;cursor:pointer}
-button:active{opacity:0.85}
-.tip{font‑size:13px;color:#888;margin‑top:4px}
+  body {
+    padding: 32px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #fafafa;
+    color: #333;
+  }
+
+  h2 {
+    margin-bottom: 24px;
+    color: #442e22;
+    font-size: 24px;
+  }
+
+  .form-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+  }
+
+  .form-item {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #442e22;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  button:active {
+    opacity: 0.85;
+  }
+
+  .tip {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
+
 <h2>📦 咖啡厅商品录入后台</h2>
-<div class="form‑item">
-  <label>商品名称</label>
-  <input type="text" id="pname" placeholder="例如：热拿铁">
+
+<div class="form-card">
+  <div class="form-item">
+    <label>商品名称</label>
+    <input type="text" id="pname" placeholder="例如：热拿铁">
+  </div>
+  <div class="form-item">
+    <label>价格（元）</label>
+    <input type="number" id="pprice" placeholder="28">
+  </div>
+  <div class="form-item">
+    <label>商品描述</label>
+    <textarea id="pdesc" placeholder="简单介绍"></textarea>
+  </div>
+  <div class="form-item">
+    <label>微信收款码链接</label>
+    <input type="text" id="wxqr" placeholder="粘贴收款码图片地址">
+  </div>
+  <button onclick="submitProduct()">保存到飞书商品库</button>
 </div>
-<div class="form‑item">
-  <label>价格（元）</label>
-  <input type="number" id="pprice" placeholder="28">
-</div>
-<div class="form‑item">
-  <label>商品描述</label>
-  <textarea id="pdesc" placeholder="简单介绍"></textarea>
-</div>
-<div class="form‑item">
-  <label>商品图片</label>
-  <input type="file" id="pimg" accept="image/*">
-  <div class="tip">图片上传飞书，拿到附件链接填入下方</div>
-</div>
-<div class="form‑item">
-  <label>微信收款码链接</label>
-  <input type="text" id="wxqr" placeholder="粘贴收款码图片地址">
-</div>
-<button onclick="submitProduct()">保存到飞书商品库</button>
 
 <script>
 const SHOP_ID = "shop_001";
@@ -57,10 +117,10 @@ async function submitProduct(){
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify(payload)
-    })
+    });
     const ret = await res.json();
-    alert(ret.ok?"保存成功":"失败："+ret.msg);
-  }catch(err){
+    alert(ret.ok ? "保存成功" : "失败：" + ret.msg);
+  } catch(err) {
     console.error(err);
     alert("当前为原型模式，已模拟提交。部署Cloudflare+配置飞书应用后正式生效");
   }

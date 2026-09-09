@@ -6,16 +6,16 @@
   <title>☕ 街角咖啡厅｜菜单</title>
   <style>
     :root {
-      --bg-color: #f8f6f0;
+      --bg-color: #f7f4ef;
       --card-bg: #ffffff;
-      --primary-color: #442e22;
+      --primary-color: #3e2723;
       --accent-color: #c86b28;
       --accent-hover: #b05a1f;
       --text-main: #2c2c2c;
-      --text-muted: #6e6e6e;
+      --text-muted: #786c66;
       --border-radius: 16px;
-      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-      --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.12);
+      --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.06);
+      --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
     }
 
     * {
@@ -28,30 +28,54 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 32px 20px 60px;
+      padding: 40px 20px 80px;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Header Section */
+    /* Header */
     .header {
       text-align: center;
-      margin-bottom: 40px;
-      padding: 20px 0;
+      margin-bottom: 32px;
     }
 
     .shop-name {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 700;
       color: var(--primary-color);
       margin-bottom: 8px;
-      letter-spacing: -0.5px;
     }
 
     .shop-slogan {
       color: var(--text-muted);
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 15px;
+    }
+
+    /* Category Navigation */
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(62, 39, 35, 0.15);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--primary-color);
+      color: #fff;
+      border-color: var(--primary-color);
     }
 
     /* Grid Layout */
@@ -70,6 +94,7 @@
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       display: flex;
       flex-direction: column;
+      position: relative;
       border: 1px solid rgba(0, 0, 0, 0.04);
     }
 
@@ -78,11 +103,36 @@
       box-shadow: var(--shadow-hover);
     }
 
-    .card-img {
+    .card-img-wrap {
+      position: relative;
       height: 200px;
       width: 100%;
+      overflow: hidden;
+      background-color: #eae6e1;
+    }
+
+    .card-img {
+      height: 100%;
+      width: 100%;
       object-fit: cover;
-      background-color: #eee;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img {
+      transform: scale(1.04);
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
     }
 
     .card-body {
@@ -94,18 +144,18 @@
     }
 
     .title {
-      font-size: 19px;
-      font-weight: 600;
+      font-size: 18px;
+      font-weight: 700;
       color: var(--primary-color);
       margin-bottom: 6px;
     }
 
     .desc {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
       margin-bottom: 16px;
       line-height: 1.5;
-      min-height: 42px;
+      min-height: 40px;
     }
 
     .row {
@@ -141,7 +191,7 @@
       transform: scale(0.98);
     }
 
-    /* Modal Overlay */
+    /* Modal */
     .pay-modal {
       position: fixed;
       inset: 0;
@@ -196,11 +246,6 @@
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s ease;
-    }
-
-    .close-btn:hover {
-      opacity: 0.9;
     }
   </style>
 </head>
@@ -208,7 +253,13 @@
 
   <div class="header">
     <h1 class="shop-name">☕ 街角咖啡厅</h1>
-    <p class="shop-slogan">新鲜现磨咖啡 · 到店扫码点单</p>
+    <p class="shop-slogan">新鲜现磨咖啡 · 精致甜品蛋糕 · 到店扫码点单</p>
+  </div>
+
+  <div class="category-tabs">
+    <button class="tab-btn active" onclick="filterCategory('all', this)">全部商品</button>
+    <button class="tab-btn" onclick="filterCategory('coffee', this)">精品咖啡</button>
+    <button class="tab-btn" onclick="filterCategory('dessert', this)">甜品蛋糕</button>
   </div>
 
   <div class="product-wrap" id="productList"></div>
@@ -224,28 +275,85 @@
 
 <script>
 const SHOP_ID = "shop_001";
+let allProducts = [];
+
+const fallbackProducts = [
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "热拿铁",
+      "价格": 28,
+      "商品描述": "醇厚牛奶搭配浓缩咖啡，丝滑口感",
+      "tag": "热销",
+      "img": "https://images.unsplash.com/photo-1534778101976-62847782c213?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "冰美式",
+      "价格": 22,
+      "商品描述": "经典双份浓缩萃取，清爽提神",
+      "tag": "推荐",
+      "img": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "焦糖玛奇朵",
+      "价格": 32,
+      "商品描述": "香甜焦糖风味，搭配浓郁奶泡",
+      "tag": "甜美",
+      "img": "https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "提拉米苏蛋糕",
+      "价格": 38,
+      "商品描述": "意式经典手作，马斯卡彭芝士与可可香气",
+      "tag": "招牌甜点",
+      "img": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "草莓奶油蛋糕",
+      "价格": 36,
+      "商品描述": "新鲜草莓夹心，清甜不腻口",
+      "tag": "新品",
+      "img": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "宇治抹茶卷",
+      "价格": 30,
+      "商品描述": "进口抹茶粉制作，回甘悠长",
+      "tag": "限定",
+      "img": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"
+    }
+  }
+];
 
 async function loadProducts(){
-  const mockData = [
-    {fields: {"商品名称": "热拿铁", "价格": 28, "商品描述": "醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
-    {fields: {"商品名称": "冰美式", "价格": 22, "商品描述": "清爽冰美式，提神解乏"}},
-    {fields: {"商品名称": "焦糖玛奇朵", "价格": 32, "商品描述": "香甜焦糖风味，奶香浓郁"}}
-  ];
-
   try {
     const res = await fetch("/api/feishu-proxy?shop_id=" + SHOP_ID);
-    if (!res.ok) throw new Error("API network response was not ok");
+    if (!res.ok) throw new Error("API not ready");
     const data = await res.json();
-    
     if (data.records && data.records.length > 0) {
-      renderList(data.records);
+      allProducts = data.records;
     } else {
-      renderList(mockData);
+      allProducts = fallbackProducts;
     }
   } catch(e) {
-    console.warn("API request failed, displaying fallback items:", e);
-    renderList(mockData);
+    allProducts = fallbackProducts;
   }
+  renderList(allProducts);
 }
 
 function renderList(list){
@@ -255,11 +363,16 @@ function renderList(list){
     const f = item.fields;
     const div = document.createElement("div");
     div.className = "card";
-    const imgSrc = (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500';
-    const qrUrl = (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
     
+    const imgSrc = f.img || (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500';
+    const qrUrl = f.qr || (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
+    const tagText = f.tag || (item.category === 'dessert' ? '甜点' : '咖啡');
+
     div.innerHTML = `
-      <img class="card-img" src="${imgSrc}" alt="${f["商品名称"]}">
+      <div class="card-img-wrap">
+        <span class="badge">${tagText}</span>
+        <img class="card-img" src="${imgSrc}" alt="${f["商品名称"]}">
+      </div>
       <div class="card-body">
         <div>
           <div class="title">${f["商品名称"]}</div>
@@ -273,6 +386,18 @@ function renderList(list){
     `;
     dom.appendChild(div);
   });
+}
+
+function filterCategory(cat, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (cat === 'all') {
+    renderList(allProducts);
+  } else {
+    const filtered = allProducts.filter(item => item.category === cat);
+    renderList(filtered);
+  }
 }
 
 function openPay(qrcodeUrl, price){
@@ -292,5 +417,6 @@ function closeModal(){
 }
 
 loadProducts();
-</script></body>
+</script>
+</body>
 </html>

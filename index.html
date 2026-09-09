@@ -366,7 +366,7 @@ const fallbackProducts = [
       "价格": 32,
       "商品描述": "浓缩咖啡融汇浓郁巧克力的完美滋味",
       "tag": "人气",
-      "img": "https://images.unsplash.com/photo-1607260550778-ea9d295b3f5d?w=500"
+      "img": "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500"
     }
   },
 
@@ -487,14 +487,15 @@ function renderList(list){
     const div = document.createElement("div");
     div.className = "card";
     
-    const imgSrc = f.img || (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500';
+    const defaultImg = 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500';
+    const imgSrc = f.img || (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || defaultImg;
     const qrUrl = f.qr || (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
     const tagText = f.tag || (item.category === 'dessert' ? '甜点' : '咖啡');
 
     div.innerHTML = `
       <div class="card-img-wrap">
         <span class="badge">${tagText}</span>
-        <img class="card-img" src="${imgSrc}" alt="${f["商品名称"]}">
+        <img class="card-img" src="${imgSrc}" alt="${f["商品名称"]}" onerror="this.onerror=null;this.src='${defaultImg}';">
       </div>
       <div class="card-body">
         <div>
@@ -510,7 +511,6 @@ function renderList(list){
     dom.appendChild(div);
   });
 }
-
 function filterCategory(cat, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');

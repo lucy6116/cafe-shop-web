@@ -253,13 +253,13 @@
 
   <div class="header">
     <h1 class="shop-name">☕ 街角咖啡厅</h1>
-    <p class="shop-slogan">新鲜现磨咖啡 · 精致甜品蛋糕 · 到店扫码点单</p>
+    <p class="shop-slogan">新鲜现磨咖啡 · 精致手作甜品 · 到店扫码点单</p>
   </div>
 
   <div class="category-tabs">
-    <button class="tab-btn active" onclick="filterCategory('all', this)">全部商品</button>
-    <button class="tab-btn" onclick="filterCategory('coffee', this)">精品咖啡</button>
-    <button class="tab-btn" onclick="filterCategory('dessert', this)">甜品蛋糕</button>
+    <button class="tab-btn active" onclick="filterCategory('all', this)">全部商品 (18)</button>
+    <button class="tab-btn" onclick="filterCategory('coffee', this)">精品咖啡 (9)</button>
+    <button class="tab-btn" onclick="filterCategory('dessert', this)">甜品蛋糕 (9)</button>
   </div>
 
   <div class="product-wrap" id="productList"></div>
@@ -278,6 +278,7 @@ const SHOP_ID = "shop_001";
 let allProducts = [];
 
 const fallbackProducts = [
+  // 9 Coffee Items
   {
     category: "coffee",
     fields: {
@@ -309,6 +310,68 @@ const fallbackProducts = [
     }
   },
   {
+    category: "coffee",
+    fields: {
+      "商品名称": "卡布奇诺",
+      "价格": 28,
+      "商品描述": "丰富绵密奶泡，撒上香浓可可粉",
+      "tag": "经典",
+      "img": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "澳白 (Flat White)",
+      "价格": 30,
+      "商品描述": "精细奶泡与强劲浓缩，口感极其浓郁",
+      "tag": "特调",
+      "img": "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "脏脏咖啡 (Dirty)",
+      "价格": 34,
+      "商品描述": "冰牛奶与热浓缩的分层视觉与分层口感",
+      "tag": "网红",
+      "img": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "西班牙拿铁",
+      "价格": 32,
+      "商品描述": "加入炼乳特调，口感香甜醇厚",
+      "tag": "招牌",
+      "img": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "生椰拿铁",
+      "价格": 30,
+      "商品描述": "清甜生椰乳与浓缩咖啡融合，椰香浓郁",
+      "tag": "爆款",
+      "img": "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500"
+    }
+  },
+  {
+    category: "coffee",
+    fields: {
+      "商品名称": "摩卡咖啡",
+      "价格": 32,
+      "商品描述": "浓缩咖啡融汇浓郁巧克力的完美滋味",
+      "tag": "人气",
+      "img": "https://images.unsplash.com/photo-1607260550778-ea9d295b3f5d?w=500"
+    }
+  },
+
+  // 9 Dessert & Cake Items
+  {
     category: "dessert",
     fields: {
       "商品名称": "提拉米苏蛋糕",
@@ -333,9 +396,69 @@ const fallbackProducts = [
     fields: {
       "商品名称": "宇治抹茶卷",
       "价格": 30,
-      "商品描述": "进口抹茶粉制作，回甘悠长",
+      "商品描述": "进口抹茶粉制作，微苦回甘悠长",
       "tag": "限定",
       "img": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "巴斯克芝士蛋糕",
+      "价格": 35,
+      "商品描述": "焦香表皮搭配半熟软糯芝士芯",
+      "tag": "热销",
+      "img": "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "熔岩巧克力舒芙蕾",
+      "价格": 38,
+      "商品描述": "热气腾腾的法式巧克力流心蛋糕",
+      "tag": "现烤",
+      "img": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "芒果千层蛋糕",
+      "价格": 36,
+      "商品描述": "手作超薄蛋皮与新鲜大块芒果肉",
+      "tag": "推荐",
+      "img": "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "焦糖法式布丁",
+      "价格": 24,
+      "商品描述": "脆皮焦糖搭配细腻香草籽布丁",
+      "tag": "轻甜",
+      "img": "https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "蒙布朗栗子蛋糕",
+      "价格": 38,
+      "商品描述": "法式栗子泥与香草鲜奶油的经典组合",
+      "tag": "秋冬",
+      "img": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"
+    }
+  },
+  {
+    category: "dessert",
+    fields: {
+      "商品名称": "蔓越莓司康配奶油",
+      "价格": 22,
+      "商品描述": "外脆内软的英式司康，附赠凝块奶油与果酱",
+      "tag": "下午茶",
+      "img": "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=500"
     }
   }
 ];

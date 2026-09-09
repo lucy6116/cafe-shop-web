@@ -517,7 +517,7 @@ function renderList(list){
         </div>
         <div class="row">
           <span class="price">¥${f["价格"]}</span>
-          <button class="buy-btn" onclick="openPay('${qrUrl}', '${f["价格"]}')">立即购买</button>
+          <button class="buy-btn" onclick="openPay('${qrUrl || 'images/qr-code.png'}', '${f["价格"]}')">立即购买</button>
         </div>
       </div>
     `;

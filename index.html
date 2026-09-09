@@ -551,7 +551,24 @@ function openPay(qrcodeUrl, price){
 function closeModal(){
   document.getElementById("payModal").style.display = "none";
 }
+// Test Payment Handler
+function processTestPayment(orderData) {
+  console.log("Processing Test Payment...", orderData);
 
+  // 1. Simulate API delay
+  setTimeout(() => {
+    // 2. Mock payment confirmation
+    const isSuccess = true; // Set to false to test payment failure handling
+
+    if (isSuccess) {
+      alert(`Payment Successful! Order ID: #${Math.floor(Math.random() * 100000)}`);
+      // Clear cart or redirect customer
+      clearCart();
+    } else {
+      alert("Payment Failed. Please try again.");
+    }
+  }, 1500);
+}
 loadProducts();
 </script>
 </body>

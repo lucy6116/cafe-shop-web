@@ -40,11 +40,21 @@
     }
 
     .shop-name {
-      font-size: 34px;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 8px;
-    }
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.site-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
 
     .shop-slogan {
       color: var(--text-muted);
@@ -252,9 +262,12 @@
 <body>
 
   <div class="header">
-    <h1 class="shop-name">☕ 街角咖啡厅</h1>
-    <p class="shop-slogan">新鲜现磨咖啡 · 精致手作甜品 · 到店扫码点单</p>
-  </div>
+  <h1 class="shop-name">
+    <img src="assets/logo.png" alt="Logo" class="site-logo" />
+    街角咖啡厅
+  </h1>
+  <p class="shop-slogan">新鲜现磨咖啡 · 精致手作甜品 · 到店扫码点单</p>
+</div>
 
   <div class="category-tabs">
     <button class="tab-btn active" onclick="filterCategory('all', this)">全部商品 (18)</button>

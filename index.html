@@ -226,16 +226,24 @@
 const SHOP_ID = "shop_001";
 
 async function loadProducts(){
+  const mockData = [
+    {fields: {"商品名称": "热拿铁", "价格": 28, "商品描述": "醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
+    {fields: {"商品名称": "冰美式", "价格": 22, "商品描述": "清爽冰美式，提神解乏"}},
+    {fields: {"商品名称": "焦糖玛奇朵", "价格": 32, "商品描述": "香甜焦糖风味，奶香浓郁"}}
+  ];
+
   try {
     const res = await fetch("/api/feishu-proxy?shop_id=" + SHOP_ID);
+    if (!res.ok) throw new Error("API network response was not ok");
     const data = await res.json();
-    renderList(data.records || []);
+    
+    if (data.records && data.records.length > 0) {
+      renderList(data.records);
+    } else {
+      renderList(mockData);
+    }
   } catch(e) {
-    const mockData = [
-      {fields: {"商品名称": "热拿铁", "价格": 28, "商品描述": "醇厚牛奶搭配浓缩咖啡，丝滑口感"}},
-      {fields: {"商品名称": "冰美式", "价格": 22, "商品描述": "清爽冰美式，提神解乏"}},
-      {fields: {"商品名称": "焦糖玛奇朵", "价格": 32, "商品描述": "香甜焦糖风味，奶香浓郁"}}
-    ];
+    console.warn("API request failed, displaying fallback items:", e);
     renderList(mockData);
   }
 }
@@ -247,7 +255,7 @@ function renderList(list){
     const f = item.fields;
     const div = document.createElement("div");
     div.className = "card";
-    const imgSrc = (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://picsum.photos/id/1060/400/220';
+    const imgSrc = (f["商品图片"] && f["商品图片"][0] && f["商品图片"][0].url) || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500';
     const qrUrl = (f["微信收款码"] && f["微信收款码"][0] && f["微信收款码"][0].url) || '';
     
     div.innerHTML = `
@@ -284,6 +292,5 @@ function closeModal(){
 }
 
 loadProducts();
-</script>
-</body>
+</script></body>
 </html>
